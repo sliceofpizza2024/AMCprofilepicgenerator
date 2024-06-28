@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Upload with AMC Logo</title>
+    <title>AMCify Your Profile Pic!</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&display=swap');
         
@@ -41,16 +41,27 @@
             width: 100px;
             height: 100px;
         }
+        #download-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <div id="upload-container">
-        <h1>Upload Your Image</h1>
+        <h1>AMCify your profile pic!</h1>
         <input type="file" id="file-input" accept="image/*">
     </div>
     <div id="result-container">
         <img id="base-image" alt="Uploaded Image">
-        <img id="amc-logo" src="amclogo.jpg" alt="AMC Logo">
+        <img id="amc-logo" src="amclogo.png" alt="AMC Logo">
+        <button id="download-button">Download Image</button>
     </div>
 
     <script>
@@ -64,6 +75,36 @@
                     document.getElementById('result-container').style.display = 'block';
                 };
                 reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('download-button').addEventListener('click', function() {
+            const baseImage = document.getElementById('base-image');
+            const amcLogo = document.getElementById('amc-logo');
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            const baseImageObj = new Image();
+            baseImageObj.src = baseImage.src;
+            baseImageObj.onload = function() {
+                canvas.width = baseImageObj.width;
+                canvas.height = baseImageObj.height;
+
+                ctx.drawImage(baseImageObj, 0, 0);
+
+                const amcLogoObj = new Image();
+                amcLogoObj.src = amcLogo.src;
+                amcLogoObj.onload = function() {
+                    const logoWidth = amcLogoObj.width;
+                    const logoHeight = amcLogoObj.height;
+                    ctx.drawImage(amcLogoObj, canvas.width - logoWidth - 10, 10, logoWidth, logoHeight);
+
+                    const link = document.createElement('a');
+                    link.download = 'amcified-image.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }
             }
         });
     </script>
