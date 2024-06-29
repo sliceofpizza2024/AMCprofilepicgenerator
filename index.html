@@ -14,10 +14,18 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: url('cowboy.jpg') no-repeat center center fixed;
-            background-size: cover;
             font-family: 'Libre Baskerville', serif;
             color: white;
+            background: none; /* Remove previous background setting */
+        }
+        #background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.85; /* Set opacity to 85% */
         }
         #upload-container {
             text-align: center;
@@ -25,10 +33,12 @@
             background: rgba(0, 0, 0, 0.5);
             padding: 20px;
             border-radius: 10px;
+            z-index: 1; /* Ensure it's above the background image */
         }
         #result-container {
             position: relative;
             display: none;
+            z-index: 1; /* Ensure it's above the background image */
         }
         #result-container img {
             max-width: 100%;
@@ -40,6 +50,7 @@
             right: 10px;
             width: 100px;
             height: 100px;
+            z-index: 1; /* Ensure it's above the background image */
         }
         #download-button {
             margin-top: 20px;
@@ -50,10 +61,12 @@
             color: white;
             border: none;
             border-radius: 5px;
+            z-index: 1; /* Ensure it's above the background image */
         }
     </style>
 </head>
 <body>
+    <img id="background-image" src="cowboy.jpg" alt="Background Image">
     <div id="upload-container">
         <h1>AMCify your profile pic!</h1>
         <input type="file" id="file-input" accept="image/*">
