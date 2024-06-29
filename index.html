@@ -16,15 +16,8 @@
             align-items: center;
             font-family: 'Libre Baskerville', serif;
             color: white;
-            background: none; /* Remove previous background setting */
-        }
-        #background-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+            background: url('cowboy.jpg') no-repeat center center fixed;
+            background-size: cover;
             opacity: 0.85; /* Set opacity to 85% */
         }
         #upload-container {
@@ -48,11 +41,8 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            /* Ensure the logo is displayed at its full size */
-            width: auto;
-            height: auto;
-            max-width: 100px; /* Limit maximum width if necessary */
-            max-height: 100px; /* Limit maximum height if necessary */
+            width: 100px; /* Adjust according to your logo size */
+            height: 100px; /* Adjust according to your logo size */
             z-index: 1; /* Ensure it's above the background image */
         }
         #download-button {
@@ -69,14 +59,13 @@
     </style>
 </head>
 <body>
-    <img id="background-image" src="cowboy.jpg" alt="Background Image">
     <div id="upload-container">
         <h1>AMCify your profile pic!</h1>
         <input type="file" id="file-input" accept="image/*">
     </div>
     <div id="result-container">
+        <canvas id="output-canvas" style="display: none;"></canvas>
         <img id="base-image" alt="Uploaded Image">
-        <!-- Ensure amc-logo.png is loaded at full size -->
         <img id="amc-logo" src="amclogo.png" alt="AMC Logo">
         <button id="download-button">Download Image</button>
     </div>
@@ -87,7 +76,41 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const baseImage = document.getElementById('base-image');
+                    const baseImage = new Image();
+                    baseImage.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        canvas.width = baseImage.width;
+                        canvas.height = baseImage.height;
+
+                        ctx.drawImage(baseImage, 0, 0);
+
+                        const amcLogo = document.getElementById('amc-logo');
+                        const amcLogoImg = new Image();
+                        amcLogoImg.src = amcLogo.src;
+                        amcLogoImg.onload = function() {
+                            const logoWidth = amcLogoImg.width;
+                            const logoHeight = amcLogoImg.height;
+
+                            // Calculate the scale to fit baseImage into the logo dimensions
+                            const scale = Math.min(logoWidth / baseImage.width, logoHeight / baseImage.height);
+
+                            const scaledWidth = baseImage.width * scale;
+                            const scaledHeight = baseImage.height * scale;
+
+                            // Position the baseImage centered within the logo area
+                            const offsetX = (logoWidth - scaledWidth) / 2;
+                            const offsetY = (logoHeight - scaledHeight) / 2;
+
+                            ctx.drawImage(baseImage, offsetX, offsetY, scaledWidth, scaledHeight);
+
+                            const link = document.createElement('a');
+                            link.download = 'amcified-image.png';
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                        };
+                    };
                     baseImage.src = e.target.result;
                     document.getElementById('result-container').style.display = 'block';
                 };
