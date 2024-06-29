@@ -56,11 +56,23 @@
             border-radius: 5px;
             z-index: 1; /* Ensure it's above the background image */
         }
+        .emojis {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        .emojis span {
+            margin: 0 10px;
+        }
     </style>
 </head>
 <body>
     <div id="upload-container">
-        <h1>AMCify your profile pic!</h1>
+        <h1 class="emojis">
+            <span>🔫</span> AMCify your Profile Pic! <span>🔫</span>
+        </h1>
         <input type="file" id="file-input" accept="image/*">
     </div>
     <div id="result-container">
@@ -140,9 +152,12 @@
                     const logoHeight = amcLogoObj.height;
                     ctx.drawImage(amcLogoObj, canvas.width - logoWidth - 10, 10, logoWidth, logoHeight);
 
+                    // Determine the file extension based on the user's choice (jpg or png)
+                    const fileName = 'amcified-image.' + (canvas.toDataURL('image/jpeg').indexOf('data:image/jpeg') === 0 ? 'jpg' : 'png');
+                    
                     const link = document.createElement('a');
-                    link.download = 'amcified-image.png';
-                    link.href = canvas.toDataURL('image/png');
+                    link.download = fileName;
+                    link.href = canvas.toDataURL('image/' + (fileName === 'jpg' ? 'jpeg' : 'png'));
                     link.click();
                 }
             }
