@@ -48,8 +48,11 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            width: 100px;
-            height: 100px;
+            /* Ensure the logo is displayed at its full size */
+            width: auto;
+            height: auto;
+            max-width: 100px; /* Limit maximum width if necessary */
+            max-height: 100px; /* Limit maximum height if necessary */
             z-index: 1; /* Ensure it's above the background image */
         }
         #download-button {
@@ -73,6 +76,7 @@
     </div>
     <div id="result-container">
         <img id="base-image" alt="Uploaded Image">
+        <!-- Ensure amc-logo.png is loaded at full size -->
         <img id="amc-logo" src="amclogo.png" alt="AMC Logo">
         <button id="download-button">Download Image</button>
     </div>
